@@ -1,4 +1,4 @@
-[![build status](https://secure.travis-ci.org/alertify/alertify.js.png)](http://travis-ci.org/alertify/alertify.js)
+[![Build status](https://secure.travis-ci.org/alertifyjs/alertify.js.png)](http://travis-ci.org/alertifyjs/alertify.js)
 
 Alertify is an unobtrusive customizable JavaScript notification system.
 
