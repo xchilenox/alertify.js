@@ -6,7 +6,8 @@ var gulp = require("gulp"),
     sass = require("gulp-sass"),
     concat = require("gulp-concat"),
     mochaPhantomJS = require('gulp-mocha-phantomjs'),
-    connect = require("gulp-connect");
+    connect = require("gulp-connect"),
+    size = require('gulp-size');
 
 function p(path) {
     return __dirname + (path.charAt(0) === "/" ? "" : "/") + path;
@@ -15,6 +16,7 @@ function p(path) {
 gulp.task("uglify", function () {
     gulp.src(p("src/js/alertify.js"))
         .pipe(uglify({outSourceMap: true}))
+        .pipe(size({showFiles: true, gzip: true, title: "alertify.js"}))
         .pipe(gulp.dest(p("dist/js")))
         .pipe(connect.reload());
 });
@@ -36,6 +38,7 @@ gulp.task("css-min", function () {
         .pipe(concat("alertify.css"))
         .pipe(minifyCSS())
         .pipe(prefix("last 2 version", "> 1%"))
+        .pipe(size({showFiles: true, gzip: true, title: "alertify.css"}))
         .pipe(gulp.dest(p("dist/css")));
 
 });

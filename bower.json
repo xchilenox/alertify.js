@@ -1,5 +1,5 @@
 {
-    "name": "alertify",
+    "name": "alertifyjs",
     "version": "0.5.0",
     "main": "dist/js/alertify.js",
     "ignore": [

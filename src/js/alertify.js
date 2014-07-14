@@ -38,22 +38,6 @@
         el.removeEventListener(event, fn, false);
     };
 
-    /**
-     * Prevent default event from firing
-     *
-     * @param  {Event} event Event object
-     * @return {undefined}
-     */
-    function prevent(event) {
-        if (event) {
-            if (event.preventDefault) {
-                event.preventDefault();
-            } else {
-                event.returnValue = false;
-            }
-        }
-    }
-
     var transition = ( function () {
         var t, type;
         var supported = false;
@@ -129,7 +113,7 @@
          * @return {undefined}
          */
         function handleTransitionEvent(event) {
-            prevent(event);
+            event.preventDefault();
             clearTimeout(transitionTimeout);
             setFocus();
 
@@ -179,7 +163,7 @@
          * @return {undefined}
          */
         function onReset(event) {
-            prevent(event);
+            event.preventDefault();
             setFocus(true);
         }
 
@@ -190,7 +174,7 @@
          * @return {undefined}
          */
         function onOK(event) {
-            prevent(event);
+            event.preventDefault();
             parent.close();
 
             // allow custom `ok` method
@@ -206,7 +190,7 @@
          * @return {undefined}
          */
         function onCancel(event) {
-            prevent(event);
+            event.preventDefault();
             parent.close();
 
             // allow custom `cancel` method
@@ -416,42 +400,28 @@
     function AlertifyNotification(title, parameters, properties) {
 
         var self = this;
-        this.type = "notificatin";
+        this.type = "notification";
         this.properties = properties || false;
         this.message = title;
         this.permission = Notification.permission;
-        this.fallback = false;
         this.parameters = parameters || {};
 
         if (typeof this.onclose === "function") {
             this.options.onclose = this.onclose;
         }
 
-        if (this.permission !== "denied" && this.permission !== "granted") {
+        if (this.permission === "denied" || this.permission === "granted") {
+            this.permission = Notification.permission;
+        } else {
             Notification.requestPermission(function (permission) {
                 this.permission = Notification.permission = permission;
             });
-        } else {
-            this.permission = Notification.permission;
         }
 
         // Fall back to alert.
-        if (!"Notification" in window) {
-            this.fallback = true;
-        } else {
-            if (this.permission !== "granted") {
-                this.fallback = true;
-            } else {
-
-
-            }
-        }
-
-        if(this.fallback) {
-            this.type = "alert";
+        if(! "Notification" in window || this.permission !== "granted") {
             return new AlertifyAlert(title);
         } else {
-            this.type = "notification";
             return this;
         }
 
