@@ -1,9 +1,9 @@
 {
+    "browser": true,
     "boss": true,
     "curly": true,
     "eqeqeq": true,
     "eqnull": true,
-    "es5": false,
     "forin": true,
     "immed": true,
     "indent": 4,
@@ -13,7 +13,7 @@
     "node": true,
     "noempty": true,
     "plusplus": true,
-    "quotmark": "single",
+    "quotmark": true,
     "smarttabs": false,
     "scripturl": true,
     "strict": false,
@@ -26,7 +26,6 @@
         "document": true,
         "alertify": true,
         "define": true,
-
         "triggerEvent": true,
         "suite": true,
         "test": true,

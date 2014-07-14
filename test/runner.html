@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>alertify.js Test Suite</title>
-    <link rel="stylesheet" href="/node_modules/mocha/mocha.css">
-    <link rel="stylesheet" href="/themes/alertify.core.css">
-    <link rel="stylesheet" href="/themes/alertify.default.css">
+    <link rel="stylesheet" href="../assets/bower_components/mocha/mocha.css">
+    <link rel="stylesheet" href="../dist/css/alertify.css">
 </head>
 <body>
     <div id="mocha"></div>
+    <div id="messages"></div>
+    <div id="fixtures"></div>
+
     <a href="#" id="focusElement"></a>
 
     <div id="alertifyCover" class="alertify-cover alertify-hidden"></div>
@@ -24,21 +26,23 @@
         </div>
     </section>
 
-    <script src="/node_modules/mocha/mocha.js"></script>
-    <script src="/node_modules/chai/chai.js"></script>
+    <script src="../assets/bower_components/mocha/mocha.js"></script>
+    <script src="../assets/bower_components/chai/chai.js"></script>
     <script>
         window.chai = chai;
         window.assert = chai.assert;
-        mocha.setup( 'tdd' );
+        mocha.setup("tdd");
     </script>
-    <script src="/lib/alertify.min.js"></script>
-    <script src="/test/helper/common.js"></script>
-    <script src="/test/specs/alertify.test.js"></script>
-    <script src="/test/specs/alert.test.js"></script>
-    <script src="/test/specs/confirm.test.js"></script>
-    <script src="/test/specs/prompt.test.js"></script>
+    <script src="../dist/js/alertify.js"></script>
+    <script src="helper/common.js"></script>
+    <script src="specs/alertify.test.js"></script>
+    <script src="specs/alert.test.js"></script>
+    <script src="specs/confirm.test.js"></script>
+    <script src="specs/prompt.test.js"></script>
     <script>
-        if ( navigator.userAgent.indexOf( 'PhantomJS' ) < 0 ) {
+        if (window.mochaPhantomJS) {
+            mochaPhantomJS.run();
+        } else {
             mocha.run();
         }
     </script>

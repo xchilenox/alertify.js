@@ -1,16 +1,24 @@
 {
-  "name": "alertify",
-  "version": "0.5.0",
-  "main": "lib/alertify.js",
-  "ignore": [
-    ".gitignore",
-    ".travis.yml",
-    ".jshintrc",
-    "Gruntfile.js",
-    "package.json",
-    "test",
-    "src",
-    "example"
-  ],
-  "dependencies": {}
+    "name": "alertify",
+    "version": "0.5.0",
+    "main": "dist/js/alertify.js",
+    "ignore": [
+        ".gitignore",
+        ".travis.yml",
+        ".jshintrc",
+        "Gruntfile.js",
+        "gulpfile.js",
+        "package.json",
+        "test",
+        "src",
+        "assets"
+    ],
+    "dependencies": {},
+    "devDependencies": {
+        "jQuery": "*",
+        "script.js": "*",
+        "mocha": "*",
+        "chai": "*"
+    },
+    "private": true
 }

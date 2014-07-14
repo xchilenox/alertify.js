@@ -1,17 +1,5 @@
-/**
- * alertify
- * An unobtrusive customizable JavaScript notification system
- *
- * @author Fabien Doiron <fabien.doiron@gmail.com>
- * @copyright Fabien Doiron 2013
- * @license MIT <http://opensource.org/licenses/mit-license.php>
- * @link http://fabien-d.github.com/alertify.js/
- * @module alertify
- * @version 0.5.0
- */
-( function ( global ) {
-    'use strict';
-
+( function (window) {
+    "use strict";
     /**
      * Use a closure to return proper event listener method. Try to use
      * `addEventListener` by default but fallback to `attachEvent` for
@@ -24,16 +12,16 @@
      * @return   {Function}
      */
     var on = ( function () {
-        if ( document.addEventListener ) {
-            return function ( el, event, fn ) {
-                el.addEventListener( event, fn, false );
+        if (document.addEventListener) {
+            return function (el, event, fn) {
+                el.addEventListener(event, fn, false);
             };
-        } else if ( document.attachEvent ) {
-            return function ( el, event, fn ) {
-                el.attachEvent( 'on' + event, fn );
+        } else if (document.attachEvent) {
+            return function (el, event, fn) {
+                el.attachEvent("on" + event, fn);
             };
         }
-    } () );
+    }() );
 
     /**
      * Use a closure to return proper event listener method. Try to use
@@ -46,17 +34,9 @@
      * @param    {Function} fn    Callback of event
      * @return   {Function}
      */
-    var off = ( function () {
-        if ( document.removeEventListener ) {
-            return function ( el, event, fn ) {
-                el.removeEventListener( event, fn, false );
-            };
-        } else if ( document.detachEvent ) {
-            return function ( el, event, fn ) {
-                el.detachEvent( 'on' + event, fn );
-            };
-        }
-    } () );
+    var off = function (el, event, fn) {
+        el.removeEventListener(event, fn, false);
+    };
 
     /**
      * Prevent default event from firing
@@ -64,9 +44,9 @@
      * @param  {Event} event Event object
      * @return {undefined}
      */
-    function prevent ( event ) {
-        if ( event ) {
-            if ( event.preventDefault ) {
+    function prevent(event) {
+        if (event) {
+            if (event.preventDefault) {
                 event.preventDefault();
             } else {
                 event.returnValue = false;
@@ -77,16 +57,16 @@
     var transition = ( function () {
         var t, type;
         var supported = false;
-        var el = document.createElement( 'fakeelement' );
+        var el = document.createElement("fakeelement");
         var transitions = {
-            'WebkitTransition': 'webkitTransitionEnd',
-            'MozTransition': 'transitionend',
-            'OTransition': 'otransitionend',
-            'transition': 'transitionend'
+            "WebkitTransition": "webkitTransitionEnd",
+            "MozTransition": "transitionend",
+            "OTransition": "otransitionend",
+            "transition": "transitionend"
         };
 
-        for ( t in transitions ) {
-            if ( el.style[ t ] !== undefined ) {
+        for (t in transitions) {
+            if (el.style[ t ] !== undefined) {
                 type = transitions[ t ];
                 supported = true;
                 break;
@@ -97,26 +77,25 @@
             type: type,
             supported: supported
         };
-    } () );
-
+    }() );
     /**
      * Base object for all dialog object
      *
      * @return {undefined}
      */
     var dialog = (function () {
-        var CLASS_BASE = 'alertify';
-        var CLASS_TYPE = CLASS_BASE + ' alertify--';
-        var CLASS_COVER_SHOW = 'alertify-cover';
-        var CLASS_COVER_HIDE = CLASS_COVER_SHOW + ' alertify-hidden';
+        var CLASS_BASE = "alertify";
+        var CLASS_TYPE = CLASS_BASE + " alertify--";
+        var CLASS_COVER_SHOW = "alertify-cover";
+        var CLASS_COVER_HIDE = CLASS_COVER_SHOW + " alertify-hidden";
 
-        var btnOK = document.getElementById( 'alertifyButtonOk' );
-        var btnCancel = document.getElementById( 'alertifyButtonCancel' );
-        var btnFocusReset = document.getElementById( 'alertifyFocusReset' );
-        var input = document.getElementById( 'alertifyInput' );
-        var titleEl = document.getElementById( 'alertifyTitle' );
-        var coverEl = document.getElementById( 'alertifyCover' );
-        var btnWrapper = document.getElementById( 'alertifyButtons' );
+        var btnOK = document.getElementById("alertifyButtonOk");
+        var btnCancel = document.getElementById("alertifyButtonCancel");
+        var btnFocusReset = document.getElementById("alertifyFocusReset");
+        var input = document.getElementById("alertifyInput");
+        var titleEl = document.getElementById("alertifyTitle");
+        var coverEl = document.getElementById("alertifyCover");
+        var btnWrapper = document.getElementById("alertifyButtons");
 
         var isDialogOpen = false;
 
@@ -129,18 +108,18 @@
 
         // set tabindex attribute on body element this allows script to give it
         // focus after the dialog is closed
-        document.body.setAttribute( 'tabindex', '0' );
+        document.body.setAttribute("tabindex", "0");
 
         /**
          * Update HTML copy based on settings as passed message
          *
          * @return {undefined}
          */
-        function build () {
+        function build() {
             titleEl.innerHTML = parent.message;
             btnOK.innerHTML = parent.settings.ok;
             btnCancel.innerHTML = parent.settings.cancel;
-            input.value = parent.value || '';
+            input.value = parent.value || "";
         }
 
         /**
@@ -149,17 +128,17 @@
          *
          * @return {undefined}
          */
-        function handleTransitionEvent ( event ) {
-            prevent( event );
-            clearTimeout( transitionTimeout );
+        function handleTransitionEvent(event) {
+            prevent(event);
+            clearTimeout(transitionTimeout);
             setFocus();
 
             // allow custom `onfocus` method
-            if ( typeof parent.onfocus === 'function' ) {
+            if (typeof parent.onfocus === "function") {
                 parent.onfocus();
             }
 
-            off( parent.el, transition.type, handleTransitionEvent );
+            off(parent.el, transition.type, handleTransitionEvent);
         }
 
         /**
@@ -167,28 +146,28 @@
          *
          * @return {undefined} [description]
          */
-        function setFocus ( reset ) {
-            on( document.body, 'keyup', onKeyup );
+        function setFocus(reset) {
+            on(document.body, "keyup", onKeyup);
 
-            if ( parent.type === 'prompt' ) {
+            if (parent.type === "prompt") {
                 input.focus();
                 input.select();
-            } else if ( reset ) {
-                if ( parent.type === 'alert' ) {
+            } else if (reset) {
+                if (parent.type === "alert") {
                     btnOK.focus();
                 } else {
                     btnWrapper.children[ 0 ].focus();
                 }
             } else {
-                switch ( parent.settings.focus ) {
-                case 'ok':
-                    btnOK.focus();
-                    break;
-                case 'cancel':
-                    btnCancel.focus();
-                    break;
-                default:
-                    btnOK.focus();
+                switch (parent.settings.focus) {
+                    case "ok":
+                        btnOK.focus();
+                        break;
+                    case "cancel":
+                        btnCancel.focus();
+                        break;
+                    default:
+                        btnOK.focus();
                 }
             }
         }
@@ -199,9 +178,9 @@
          * @param  {Event} event Focus event
          * @return {undefined}
          */
-        function onReset ( event ) {
-            prevent( event );
-            setFocus( true );
+        function onReset(event) {
+            prevent(event);
+            setFocus(true);
         }
 
         /**
@@ -210,13 +189,13 @@
          * @param  {Event} event Click event
          * @return {undefined}
          */
-        function onOK ( event ) {
-            prevent( event );
+        function onOK(event) {
+            prevent(event);
             parent.close();
 
             // allow custom `ok` method
-            if ( typeof parent.ok === 'function' ) {
-                parent.ok( input.value );
+            if (typeof parent.ok === "function") {
+                parent.ok(input.value);
             }
         }
 
@@ -226,12 +205,12 @@
          * @param  {Event} event Click event
          * @return {undefined}
          */
-        function onCancel ( event ) {
-            prevent( event );
+        function onCancel(event) {
+            prevent(event);
             parent.close();
 
             // allow custom `cancel` method
-            if ( typeof parent.cancel === 'function' ) {
+            if (typeof parent.cancel === "function") {
                 parent.cancel();
             }
         }
@@ -242,15 +221,15 @@
          * @param  {Event} event Keyboard event
          * @return {undefined}
          */
-        function onKeyup ( event ) {
+        function onKeyup(event) {
             var keyCode = event.keyCode;
 
-            if ( keyCode === keys.ENTER ) {
-                onOK( event );
+            if (keyCode === keys.ENTER) {
+                onOK(event);
             }
 
-            if ( keyCode === keys.ESC && /prompt|confirm/.test( parent.type ) ) {
-                onCancel( event );
+            if (keyCode === keys.ESC && /prompt|confirm/.test(parent.type)) {
+                onCancel(event);
             }
         }
 
@@ -261,7 +240,7 @@
              *
              * @type {Node}
              */
-            el: document.getElementById( 'alertifyDialog' ),
+            el: document.getElementById("alertifyDialog"),
 
             /**
              * Active element is the element that will receive focus after
@@ -278,9 +257,9 @@
              * @type {Object}
              */
             settings: {
-                ok: 'OK',
-                cancel: 'Cancel',
-                focus: 'ok'
+                ok: "OK",
+                cancel: "Cancel",
+                focus: "ok"
             },
 
             /**
@@ -298,35 +277,53 @@
              * @return {undefined}
              */
             show: function () {
-                if ( isDialogOpen ) {
+
+                if (isDialogOpen) {
                     return false;
+                }
+
+                parent = this;
+
+                if(this.type === "notification") {
+
+                    var notification = new Notification(this.message, this.parameters);
+                    if(this.properties) {
+                        ["onclick", "onerror", "onshow", "ondisplay"].forEach(function(event) {
+                            if(event in parent.properties && "function" === typeof parent.properties[event]) {
+                                notification[event] = parent.properties[event];
+                            }
+                        });
+                    }
+                    return true;
+
                 } else {
+
                     isDialogOpen = true;
-                    parent = this;
+
                     build();
 
                     dialog.activeElement = document.activeElement;
 
-                    on( btnOK, 'click', onOK );
-                    on( btnCancel, 'click', onCancel );
-                    on( btnFocusReset, 'focus', onReset );
+                    on(btnOK, "click", onOK);
+                    on(btnCancel, "click", onCancel);
+                    on(btnFocusReset, "focus", onReset);
 
-                    if ( transition.supported ) {
-                        on( this.el, transition.type, handleTransitionEvent );
+                    if (transition.supported) {
+                        on(this.el, transition.type, handleTransitionEvent);
                         // set 1s fallback in case transition event doesn't fire
-                        clearTimeout( transitionTimeout );
-                        transitionTimeout = setTimeout( handleTransitionEvent, 1000 );
+                        clearTimeout(transitionTimeout);
+                        transitionTimeout = setTimeout(handleTransitionEvent, 1000);
                     }
 
                     coverEl.className = CLASS_COVER_SHOW;
                     this.el.className = CLASS_TYPE + this.type;
 
-                    if ( !transition.supported ) {
+                    if (!transition.supported) {
                         setFocus();
                     }
 
                     // allow custom `onshow` method
-                    if ( typeof this.onshow === 'function' ) {
+                    if (typeof this.onshow === "function") {
                         this.onshow();
                     }
 
@@ -340,25 +337,25 @@
              * @return {undefined}
              */
             close: function () {
-                off( btnOK, 'click', onOK );
-                off( btnCancel, 'click', onCancel );
-                off( document.body, 'keyup', onKeyup );
-                off( btnFocusReset, 'focus', onReset );
+                off(btnOK, "click", onOK);
+                off(btnCancel, "click", onCancel);
+                off(document.body, "keyup", onKeyup);
+                off(btnFocusReset, "focus", onReset);
 
                 coverEl.className = CLASS_COVER_HIDE;
-                this.el.className += ' alertify-close';
+                this.el.className += " alertify-close";
 
                 dialog.activeElement.focus();
 
                 isDialogOpen = false;
 
                 // allow custom `onclose` method
-                if ( typeof this.onclose === 'function' ) {
+                if (typeof this.onclose === "function") {
                     this.onclose();
                 }
             }
         };
-    } () );
+    }() );
 
     /**
      * Alert dialog object
@@ -366,45 +363,102 @@
      * @param  {String} message Alert message
      * @return {Object}
      */
-    function AlertifyAlert ( message ) {
+    function AlertifyAlert(message) {
         // alert properties
         this.message = message;
-        this.type = 'alert';
+        this.type = "alert";
     }
 
     // Add the common dialog functionality to the prototype
     AlertifyAlert.prototype = dialog;
-
     /**
      * Confirm dialog object
      *
      * @param  {String} message Confirm message
      * @return {Object}
      */
-    function AlertifyConfirm ( message ) {
+    function AlertifyConfirm(message) {
         // confirm properties
         this.message = message;
-        this.type = 'confirm';
+        this.type = "confirm";
     }
 
     // Add the common dialog functionality to the prototype
     AlertifyConfirm.prototype = dialog;
-
     /**
      * Prompt dialog object
      *
      * @param  {String} message Prompt message
      * @return {Object}
      */
-    function AlertifyPrompt ( message, value ) {
+    function AlertifyPrompt(message, value) {
         // prompt properties
         this.message = message;
         this.value = value;
-        this.type = 'prompt';
+        this.type = "prompt";
     }
 
     // Add the common dialog functionality to the prototype
     AlertifyPrompt.prototype = dialog;
+
+
+    /**
+     *
+     * @fixme Write tests for this.
+     * @fixme Write documentation for this.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/notification
+     * @param title
+     * @param {Notification.options} HTML5 Notification options.
+     * @param {Notification.instance_properties} Callbacks for various events.
+     * @returns {*}
+     * @constructor
+     */
+    function AlertifyNotification(title, parameters, properties) {
+
+        var self = this;
+        this.type = "notificatin";
+        this.properties = properties || false;
+        this.message = title;
+        this.permission = Notification.permission;
+        this.fallback = false;
+        this.parameters = parameters || {};
+
+        if (typeof this.onclose === "function") {
+            this.options.onclose = this.onclose;
+        }
+
+        if (this.permission !== "denied" && this.permission !== "granted") {
+            Notification.requestPermission(function (permission) {
+                this.permission = Notification.permission = permission;
+            });
+        } else {
+            this.permission = Notification.permission;
+        }
+
+        // Fall back to alert.
+        if (!"Notification" in window) {
+            this.fallback = true;
+        } else {
+            if (this.permission !== "granted") {
+                this.fallback = true;
+            } else {
+
+
+            }
+        }
+
+        if(this.fallback) {
+            this.type = "alert";
+            return new AlertifyAlert(title);
+        } else {
+            this.type = "notification";
+            return this;
+        }
+
+    }
+
+    AlertifyNotification.prototype = dialog;
+
 
     /**
      * Alertify public API
@@ -412,7 +466,7 @@
      *
      * @return {Object}
      */
-    function Alertify () {
+    function Alertify() {
         return {
             /**
              * Expose dialog labels for customization
@@ -426,8 +480,8 @@
              * @param  {String} [message=undefined] Message in alert dialog
              * @return {Object}
              */
-            alert: function ( message ) {
-                return new AlertifyAlert( message );
+            alert: function (message) {
+                return new AlertifyAlert(message);
             },
 
             /**
@@ -437,8 +491,8 @@
              * @param  {String} [message=undefined] Message in confirm dialog
              * @return {Object}
              */
-            confirm: function ( message ) {
-                return new AlertifyConfirm( message );
+            confirm: function (message) {
+                return new AlertifyConfirm(message);
             },
 
             /**
@@ -449,19 +503,23 @@
              * @param  {String} [value='']          Default value in input field
              * @return {Object}
              */
-            prompt: function ( message, value ) {
-                return new AlertifyPrompt( message, value );
+            prompt: function (message, value) {
+                return new AlertifyPrompt(message, value);
+            },
+
+            notification: function (title, options, events) {
+                return new AlertifyNotification(title, options, events);
             }
         };
     }
 
     // AMD and window support
-    if ( typeof define === 'function' ) {
-        define( [], function () {
+    if (typeof define === "function") {
+        define([], function () {
             return new Alertify();
-        } );
-    } else if ( !global.alertify ) {
-        global.alertify = new Alertify();
+        });
+    } else if (!window.alertify) {
+        window.alertify = new Alertify();
     }
 
-} ( this ) );
+}(window) );
