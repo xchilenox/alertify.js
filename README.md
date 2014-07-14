@@ -4,6 +4,8 @@ Alertify is an unobtrusive customizable JavaScript notification system.
 
 ## Usage
 
+Need to add this.
+
 ## Development
 
 
@@ -27,7 +29,7 @@ installed in your browser. The default test page will be at
 
 ### Tests
 
-The test runner is at `test/runner.html'. Please run `gulp test` to make sure any changes are passing all tests.
+The test runner is at `test/runner.html`. Please run `gulp test` to make sure any changes are passing all tests.
 
 Alternately, you can view the tests at 
 [http://localhost:9000/tests/runner.html](http://localhost:9000/tests/runner.html)
@@ -43,3 +45,6 @@ Alertify is licensed under MIT http://www.opensource.org/licenses/MIT
 
 Copyright (c) 2012, Fabien Doiron  
 <fabien.doiron@gmail.com>, [@fabien_doiron](http://twitter.com/fabien_doiron)
+
+Copyright (c) 2014, Brad Berger
+<brad@bradb.net>, [@berger_brad](https://twitter.com/berger_brad)
