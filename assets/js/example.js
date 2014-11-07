@@ -1,3 +1,4 @@
+/* global $: false */
 function reset() {
     alertify.settings.ok = "OK";
     alertify.settings.cancel = "Cancel";

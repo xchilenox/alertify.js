@@ -68,6 +68,7 @@
      * @return {undefined}
      */
     var dialog = (function () {
+
         var CLASS_BASE = "alertify";
         var CLASS_TYPE = CLASS_BASE + " alertify--";
         var CLASS_COVER_SHOW = "alertify-cover";
@@ -399,7 +400,6 @@
      */
     function AlertifyNotification(title, parameters, properties) {
 
-        var self = this;
         this.type = "notification";
         this.properties = properties || false;
         this.message = title;
@@ -419,10 +419,10 @@
         }
 
         // Fall back to alert.
-        if(! "Notification" in window || this.permission !== "granted") {
-            return new AlertifyAlert(title);
-        } else {
+        if("Notification" in window || this.permission === "granted") {
             return this;
+        } else {
+            return new AlertifyAlert(title);
         }
 
     }
