@@ -1,0 +1,38 @@
+.alertify {
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: transparent;
+
+    // Disable clicking on the main element or
+    // the background element.
+    &, .dialog {
+        pointer-events: none;
+    }
+
+    :not(.dialog) {
+        pointer-events: auto;
+    }
+
+    > .log {
+        position: absolute;
+        right: .5em;
+        bottom: .5em;
+        background: #444;
+        color: rgba(255, 255, 255, .8);
+
+        &.success {
+            background: green;
+        }
+        &.error {
+            background: red;
+        }
+        &.info {
+            background: blue;
+        }
+    }
+
+}
