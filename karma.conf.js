@@ -13,7 +13,7 @@ module.exports = function(config) {
         files: [
             "node_modules/angular/angular.min.js",
             "node_modules/angular-mocks/angular-mocks.js",
-            "dist/js/ngAlertify.js",
+            "dist/js/ng-alertify.js",
             "src/js/alertify.js",
             "test/**/*Spec.js"
         ],

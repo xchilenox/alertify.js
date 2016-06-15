@@ -1,4 +1,4 @@
-angular.module("ngAlertify", []).factory("alertify", function() {
+angular.module("ngAlertify", []).factory("$alertify", function() {
 
     "use strict";
 

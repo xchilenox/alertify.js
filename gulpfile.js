@@ -44,7 +44,7 @@ gulp.task("website:js", function() {
             p("dist/js/alertify.js"),
             p("node_modules/material-design-lite/material.min.js"),
             p("node_modules/angular/angular.min.js"),
-            p("dist/js/ngAlertify.js"),
+            p("dist/js/ng-alertify.js"),
             p("website/js/demo.js")
         ])
         .pipe(concat("all.js"))
@@ -88,7 +88,7 @@ gulp.task("uglify", function () {
 
 gulp.task("js:angular", function() {
     return gulp
-        .src(p("src/js/ngAlertify.js"))
+        .src(p("src/js/ng-alertify.js"))
         .pipe(insert({"/* alertify.js */": "src/js/alertify.js"}))
         .pipe(insert({"/* style.css */": "dist/css/alertify.css"}))
         .pipe(uglify({ outSourceMap: false }))
@@ -132,7 +132,7 @@ gulp.task("watch", function () {
     ], ["build"]);
 
     gulp.watch([
-        p("dist/js/alertify.js"), p("dist/js/ngAlertify.js"), p("website/js/demo.js")
+        p("dist/js/alertify.js"), p("dist/js/ng-alertify.js"), p("website/js/demo.js")
     ], ["website:js"]);
 
     gulp.watch([

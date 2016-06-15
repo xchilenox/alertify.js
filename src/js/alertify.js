@@ -51,10 +51,10 @@
             dialogs: {
                 buttons: {
                     holder: "<nav>{{buttons}}</nav>",
-                    ok: "<button class='ok' tabindex='1'>{{ok}}</button>",
-                    cancel: "<button class='cancel' tabindex='2'>{{cancel}}</button>"
+                    ok: "<button class='btn btn-primary' tabindex='1'>{{ok}}</button>",
+                    cancel: "<button class='btn btn-default' tabindex='2'>{{cancel}}</button>"
                 },
-                input: "<input type='text'>",
+                input: "<input type='text' class='form-control' />",
                 message: "<p class='msg'>{{message}}</p>",
                 log: "<div class='{{class}}'>{{message}}</div>"
             },
@@ -366,40 +366,8 @@
                 this.maxLogItems = parseInt(num || this.defaultMaxLogItems);
             },
 
-            theme: function(themeStr) {
-                switch(themeStr.toLowerCase()) {
-                case "bootstrap":
-                    this.dialogs.buttons.ok = "<button class='ok btn btn-primary' tabindex='1'>{{ok}}</button>";
-                    this.dialogs.buttons.cancel = "<button class='cancel btn btn-default' tabindex='2'>{{cancel}}</button>";
-                    this.dialogs.input = "<input type='text' class='form-control'>";
-                    break;
-                case "purecss":
-                    this.dialogs.buttons.ok = "<button class='ok pure-button' tabindex='1'>{{ok}}</button>";
-                    this.dialogs.buttons.cancel = "<button class='cancel pure-button' tabindex='2'>{{cancel}}</button>";
-                    break;
-                case "mdl":
-                case "material-design-light":
-                    this.dialogs.buttons.ok = "<button class='ok mdl-button mdl-js-button mdl-js-ripple-effect'  tabindex='1'>{{ok}}</button>";
-                    this.dialogs.buttons.cancel = "<button class='cancel mdl-button mdl-js-button mdl-js-ripple-effect' tabindex='2'>{{cancel}}</button>";
-                    this.dialogs.input = "<div class='mdl-textfield mdl-js-textfield'><input class='mdl-textfield__input'><label class='md-textfield__label'></label></div>";
-                    break;
-                case "angular-material":
-                    this.dialogs.buttons.ok = "<button class='ok md-primary md-button' tabindex='1'>{{ok}}</button>";
-                    this.dialogs.buttons.cancel = "<button class='cancel md-button' tabindex='2'>{{cancel}}</button>";
-                    this.dialogs.input = "<div layout='column'><md-input-container md-no-float><input type='text'></md-input-container></div>";
-                    break;
-                case "default":
-                default:
-                    this.dialogs.buttons.ok = this.defaultDialogs.buttons.ok;
-                    this.dialogs.buttons.cancel = this.defaultDialogs.buttons.cancel;
-                    this.dialogs.input = this.defaultDialogs.input;
-                    break;
-                }
-            },
-
             reset: function() {
                 this.parent = document.body;
-                this.theme("default");
                 this.okBtn(this.defaultOkLabel);
                 this.cancelBtn(this.defaultCancelLabel);
                 this.setMaxLogItems();
@@ -409,29 +377,9 @@
                 this.setCloseLogOnClick(this.closeLogOnClickDefault);
                 this.setLogPosition("bottom left");
                 this.logTemplateMethod = null;
-            },
-
-            injectCSS: function() {
-                if (!document.querySelector("#alertifyCSS")) {
-                    var head = document.getElementsByTagName("head")[0];
-                    var css = document.createElement("style");
-                    css.type = "text/css";
-                    css.id = "alertifyCSS";
-                    css.innerHTML = "/* style.css */";
-                    head.insertBefore(css, head.firstChild);
-                }
-            },
-
-            removeCSS: function() {
-                var css = document.querySelector("#alertifyCSS");
-                if (css && css.parentNode) {
-                    css.parentNode.removeChild(css);
-                }
             }
 
         };
-
-        _alertify.injectCSS();
 
         return {
             _$$alertify: _alertify,
@@ -453,10 +401,6 @@
             },
             log: function(message, click) {
                 _alertify.log(message, "default", click);
-                return this;
-            },
-            theme: function(themeStr) {
-                _alertify.theme(themeStr);
                 return this;
             },
             success: function(message, click) {
