@@ -16,13 +16,13 @@ describe("settings unit tests", function() {
         expect(alertify.version).toEqual($alertify.version);
     });
 
-    it("should set default maxLogItems", function() {
-        expect($alertify.maxLogItems).toBe(2);
+    it("should set default maxToastItems", function() {
+        expect($alertify.maxToastItems).toBe(2);
     });
 
-    it("should set default maxLogItems", function() {
-        alertify.maxLogItems(10);
-        expect($alertify.maxLogItems).toBe(10);
+    it("should set default maxToastItems", function() {
+        alertify.maxToastItems(10);
+        expect($alertify.maxToastItems).toBe(10);
     });
 
     it("should set empty default input prompt value", function() {
@@ -44,17 +44,17 @@ describe("settings unit tests", function() {
     });
 
     it("should set close on click to be false by default", function() {
-        expect($alertify.closeLogOnClick).toBe(false);
+        expect($alertify.closeToastOnClick).toBe(false);
     });
 
     it("should set close on click to be true", function() {
-        alertify.closeLogOnClick(true);
-        expect($alertify.closeLogOnClick).toBe(true);
+        alertify.closeToastOnClick(true);
+        expect($alertify.closeToastOnClick).toBe(true);
     });
 
     it("should set close on click to be false", function() {
-        alertify.closeLogOnClick(false);
-        expect($alertify.closeLogOnClick).toBe(false);
+        alertify.closeToastOnClick(false);
+        expect($alertify.closeToastOnClick).toBe(false);
     });
 
     it("should set default ok btn", function() {
@@ -88,18 +88,18 @@ describe("settings unit tests", function() {
         alertify.delay(1000);
         alertify.cancelBtn("No");
         alertify.okBtn("Yes");
-        alertify.closeLogOnClick(true);
+        alertify.closeToastOnClick(true);
         alertify.defaultValue("alertify rocks");
         alertify.placeholder("alertify rocks");
-        alertify.maxLogItems(10);
+        alertify.maxToastItems(10);
         alertify.reset();
         expect($alertify.delay).toBe(5000);
         expect($alertify.cancelLabel).toBe("Cancel");
         expect($alertify.okLabel).toBe("Ok");
-        expect($alertify.closeLogOnClick).toBe(false);
+        expect($alertify.closeToastOnClick).toBe(false);
         expect($alertify.promptValue).toBe("");
         expect($alertify.promptPlaceholder).toBe("");
-        expect($alertify.maxLogItems).toBe(2);
+        expect($alertify.maxToastItems).toBe(2);
     });
 
     it("should change the delay", function() {

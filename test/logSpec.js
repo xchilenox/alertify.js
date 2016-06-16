@@ -5,42 +5,42 @@ describe("Dialog Unit Tests:", function () {
 
     beforeEach(function() {
         alertify.reset();
-        alertify.clearLogs();
+        alertify.clearToast();
         $alertify = alertify._$$alertify;
     });
 
-    describe("Creating logs", function() {
+    describe("Creating toasts", function() {
 
         it("should create elements", function(done) {
-            alertify.log('rolls down stairs');
+            alertify.toast('rolls down stairs');
             alertify.error('all over in pairs');
             setTimeout(function() {
-                expect(document.querySelector(".alertify-logs .default").innerHTML).toBe("rolls down stairs");
-                expect(document.querySelector(".alertify-logs .error").innerHTML).toBe("all over in pairs");
+                expect(document.querySelector(".alertify-toast .default").innerHTML).toBe("rolls down stairs");
+                expect(document.querySelector(".alertify-toast .error").innerHTML).toBe("all over in pairs");
                 done();
             }, 100);
         });
 
         it("should use a templating method", function(done) {
-            alertify.setLogTemplate(function (input) {
+            alertify.setToastTemplate(function (input) {
                 return input + ' sang kowalski';
             });
-            alertify.log("it rolls over your neighbor's dog");
+            alertify.toast("it rolls over your neighbor's dog");
             alertify.error("it's great for a snack");
             
             setTimeout(function() {
-                expect(document.querySelector(".alertify-logs .default").innerHTML).toBe("it rolls over your neighbor's dog sang kowalski");
-                expect(document.querySelector(".alertify-logs .error").innerHTML).toBe("it's great for a snack sang kowalski");
+                expect(document.querySelector(".alertify-toast .default").innerHTML).toBe("it rolls over your neighbor's dog sang kowalski");
+                expect(document.querySelector(".alertify-toast .error").innerHTML).toBe("it's great for a snack sang kowalski");
                 done();
             }, 100);
         });
 
         it("should reset", function () {
-            alertify.setLogTemplate(function (input) {
+            alertify.setToastTemplate(function (input) {
                 return input + ' sang kowalski';
             });
             alertify.reset();
-            expect(alertify._$$alertify.logTemplateMethod).toBe(null);
+            expect(alertify._$$alertify.toastTemplateMethod).toBe(null);
 
         });
 

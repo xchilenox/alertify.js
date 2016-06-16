@@ -13,8 +13,8 @@ describe("Dialog Unit Tests:", function () {
         it("should set the cancel/okay button label", function(done) {
             alertify.reset().cancelBtn("No!").okBtn("Yes!").confirm("Test");
             setTimeout(function() {
-                expect(document.querySelector(".alertify .dialog .cancel").innerHTML).toBe("No!");
-                expect(document.querySelector(".alertify .dialog .ok").innerHTML).toBe("Yes!");
+                expect(document.querySelector(".alertify .dialog .btn-cancel").innerHTML).toBe("No!");
+                expect(document.querySelector(".alertify .dialog .btn-ok").innerHTML).toBe("Yes!");
                 done();
             }, 100);
         });

@@ -32,7 +32,7 @@ describe("ngAlertify test suite", function() {
         expect(typeof alertify.alert).toBe("function");
         expect(typeof alertify.confirm).toBe("function");
         expect(typeof alertify.prompt).toBe("function");
-        expect(typeof alertify.log).toBe("function");
+        expect(typeof alertify.toast).toBe("function");
         expect(typeof alertify.success).toBe("function");
         expect(typeof alertify.error).toBe("function");
         expect(typeof alertify.cancelBtn).toBe("function");
@@ -40,8 +40,8 @@ describe("ngAlertify test suite", function() {
         expect(typeof alertify.delay).toBe("function");
         expect(typeof alertify.placeholder).toBe("function");
         expect(typeof alertify.defaultValue).toBe("function");
-        expect(typeof alertify.maxLogItems).toBe("function");
-        expect(typeof alertify.closeLogOnClick).toBe("function");
+        expect(typeof alertify.maxToastItems).toBe("function");
+        expect(typeof alertify.closeToastOnClick).toBe("function");
     });
 
 });

@@ -2,21 +2,21 @@
 
     "use strict";
 
-    var TRANSITION_FALLBACK_DURATION = 500;
+    var TRANSITION_FALLBACK_DURATION = 1000;
     var hideElement = function(el) {
 
-        if (! el) {
+        if(!el) {
             return;
         }
 
         var removeThis = function() {
-            if (el && el.parentNode) {
+            if(el && el.parentNode) {
                 el.parentNode.removeChild(el);
             }
         };
 
-        el.classList.remove("show");
-        el.classList.add("hide");
+        el.classList.remove("alertify-show");
+        el.classList.add("alertify-hide");
         el.addEventListener("transitionend", removeThis);
 
         // Fallback for no transitions.
@@ -31,43 +31,43 @@
          * @type {Object}
          */
         var _alertify = {
-
             parent: document.body,
             version: "1.0.11",
             defaultOkLabel: "Ok",
             okLabel: "Ok",
             defaultCancelLabel: "Cancel",
             cancelLabel: "Cancel",
-            defaultMaxLogItems: 2,
-            maxLogItems: 2,
+            defaultMaxToastItems: 2,
+            maxToastItems: 2,
+            title: "",
             promptValue: "",
             promptPlaceholder: "",
-            closeLogOnClick: false,
-            closeLogOnClickDefault: false,
+            closeToastOnClick: false,
+            closeToastOnClickDefault: false,
             delay: 5000,
             defaultDelay: 5000,
-            logContainerClass: "alertify-logs",
-            logContainerDefaultClass: "alertify-logs",
+            toastContainerClass: "alertify-toast",
+            toastContainerDefaultClass: "alertify-toast",
             dialogs: {
                 buttons: {
-                    holder: "<nav>{{buttons}}</nav>",
-                    ok: "<button class='btn btn-primary' tabindex='1'>{{ok}}</button>",
-                    cancel: "<button class='btn btn-default' tabindex='2'>{{cancel}}</button>"
+                    holder: "<div class='alertify-footer'>{{buttons}}</div>",
+                    ok: "<button class='btn btn-primary btn-ok' tabindex='1'>{{ok}}</button>",
+                    cancel: "<button class='btn btn-default btn-cancel' tabindex='2'>{{cancel}}</button>"
                 },
-                input: "<input type='text' class='form-control' />",
-                message: "<p class='msg'>{{message}}</p>",
-                log: "<div class='{{class}}'>{{message}}</div>"
+                input: "<div class='form-group'><input type='text' class='form-control' /></div>",
+                message: "<p>{{message}}</p>",
+                toast: "<div class='{{class}}'>{{message}}</div>"
             },
 
             defaultDialogs: {
                 buttons: {
-                    holder: "<nav>{{buttons}}</nav>",
-                    ok: "<button class='ok' tabindex='1'>{{ok}}</button>",
-                    cancel: "<button class='cancel' tabindex='2'>{{cancel}}</button>"
+                    holder: "<div class='alertify-footer'>{{buttons}}</div>",
+                    ok: "<button class='btn btn-primary btn-ok' tabindex='1'>{{ok}}</button>",
+                    cancel: "<button class='btn btn-default btn-cancel' tabindex='2'>{{cancel}}</button>"
                 },
-                input: "<input type='text'>",
-                message: "<p class='msg'>{{message}}</p>",
-                log: "<div class='{{class}}'>{{message}}</div>"
+                input: "<div class='form-group'><input type='text' class='form-control' /></div>",
+                message: "<p>{{message}}</p>",
+                toast: "<div class='{{class}}'>{{message}}</div>"
             },
 
             /**
@@ -80,40 +80,40 @@
             build: function(item) {
 
                 var btnTxt = this.dialogs.buttons.ok;
-                var html = "<div class='dialog'>" + "<div>" + this.dialogs.message.replace("{{message}}", item.message);
+                var title = (this.title != "") ? "<h3 class='alertify-title'>" + this.title + "</h3>" : "";
+                var html = "<div class='alertify-main'><div class='alertify-content'>" + title + this.dialogs.message.replace("{{message}}", item.message);
 
                 if(item.type === "confirm" || item.type === "prompt") {
                     btnTxt = this.dialogs.buttons.cancel + this.dialogs.buttons.ok;
                 }
 
-                if (item.type === "prompt") {
+                if(item.type === "prompt") {
                     html += this.dialogs.input;
                 }
 
-                html = (html + this.dialogs.buttons.holder + "</div>" + "</div>")
+                html = (html + "</div>" + this.dialogs.buttons.holder + "</div>")
                   .replace("{{buttons}}", btnTxt)
                   .replace("{{ok}}", this.okLabel)
                   .replace("{{cancel}}", this.cancelLabel);
 
                 return html;
-
             },
 
-            setCloseLogOnClick: function(bool) {
-                this.closeLogOnClick = !! bool;
+            setCloseToastOnClick: function(bool) {
+                this.closeToastOnClick = !! bool;
             },
 
             /**
-             * Close the log messages
+             * Close the toast messages
              *
-             * @param  {Object} elem    HTML Element of log message to close
+             * @param  {Object} elem    HTML Element of toast message to close
              * @param  {Number} wait    [optional] Time (in ms) to wait before automatically hiding the message, if 0 never hide
              *
              * @return {undefined}
              */
             close: function(elem, wait) {
 
-                if (this.closeLogOnClick) {
+                if(this.closeToastOnClick) {
                     elem.addEventListener("click", function() {
                         hideElement(elem);
                     });
@@ -121,7 +121,7 @@
 
                 wait = wait && !isNaN(+wait) ? +wait : this.delay;
 
-                if (wait < 0) {
+                if(wait < 0) {
                     hideElement(elem);
                 } else if(wait > 0) {
                     setTimeout(function() {
@@ -151,21 +151,21 @@
             },
 
             /**
-             * Show a new log message box
+             * Show a new toast message box
              *
              * @param  {String} message    The message passed from the callee
-             * @param  {String} type       [Optional] Optional type of log message
-             * @param  {Number} wait       [Optional] Time (in ms) to wait before auto-hiding the log
+             * @param  {String} type       [Optional] Optional type of toast message
+             * @param  {Number} wait       [Optional] Time (in ms) to wait before auto-hiding the toast
              *
              * @return {Object}
              */
-            log: function(message, type, click) {
+            toast: function(message, type, click) {
 
-                var existing = document.querySelectorAll(".alertify-logs > div");
-                if (existing) {
-                    var diff = existing.length - this.maxLogItems;
-                    if (diff >= 0) {
-                        for (var i = 0, _i = diff + 1; i < _i; i++) {
+                var existing = document.querySelectorAll(".alertify-toast > div");
+                if(existing) {
+                    var diff = existing.length - this.maxToastItems;
+                    if(diff >= 0) {
+                        for(var i = 0, _i = diff + 1; i < _i; i++) {
                             this.close(existing[i], -1);
                         }
                     }
@@ -174,63 +174,63 @@
                 this.notify(message, type, click);
             },
 
-            setLogPosition: function(str) {
-                this.logContainerClass = "alertify-logs " + str;
+            setToastPosition: function(str) {
+                this.toastContainerClass = "alertify-toast " + str;
             },
 
-            setupLogContainer: function() {
+            setupToastContainer: function() {
 
-                var elLog = document.querySelector(".alertify-logs");
-                var className = this.logContainerClass;
-                if (! elLog) {
-                    elLog = document.createElement("div");
-                    elLog.className = className;
-                    this.parent.appendChild(elLog);
+                var elToast = document.querySelector(".alertify-toast");
+                var className = this.toastContainerClass;
+                if(!elToast) {
+                    elToast = document.createElement("div");
+                    elToast.className = className;
+                    this.parent.appendChild(elToast);
                 }
 
                 // Make sure it's positioned properly.
-                if (elLog.className !== className) {
-                    elLog.className = className;
+                if(elToast.className !== className) {
+                    elToast.className = className;
                 }
 
-                return elLog;
+                return elToast;
 
             },
 
             /**
-             * Add new log message
+             * Add new toast message
              * If a type is passed, a class name "{type}" will get added.
              * This allows for custom look and feel for various types of notifications.
              *
              * @param  {String} message    The message passed from the callee
-             * @param  {String} type       [Optional] Type of log message
+             * @param  {String} type       [Optional] Type of toast message
              * @param  {Number} wait       [Optional] Time (in ms) to wait before auto-hiding
              *
              * @return {undefined}
              */
             notify: function(message, type, click) {
 
-                var elLog = this.setupLogContainer();
-                var log = document.createElement("div");
+                var elToast = this.setupToastContainer();
+                var toast = document.createElement("div");
 
-                log.className = (type || "default");
-                if (_alertify.logTemplateMethod) {
-                    log.innerHTML = _alertify.logTemplateMethod(message);
+                toast.className = (type || "default");
+                if(_alertify.toastTemplateMethod) {
+                    toast.innerHTML = _alertify.toastTemplateMethod(message);
                 } else {
-                    log.innerHTML = message;
+                    toast.innerHTML = message;
                 }
 
                 // Add the click handler, if specified.
-                if ("function" === typeof click) {
-                    log.addEventListener("click", click);
+                if("function" === typeof click) {
+                    toast.addEventListener("click", click);
                 }
 
-                elLog.appendChild(log);
+                elToast.appendChild(toast);
                 setTimeout(function() {
-                    log.className += " show";
+                    toast.className += " alertify-show";
                 }, 10);
 
-                this.close(log, this.delay);
+                this.close(toast, this.delay);
 
             },
 
@@ -242,46 +242,46 @@
             setup: function(item) {
 
                 var el = document.createElement("div");
-                el.className = "alertify hide";
+                el.className = "alertify alertify-hide";
                 el.innerHTML = this.build(item);
 
-                var btnOK = el.querySelector(".ok");
-                var btnCancel = el.querySelector(".cancel");
+                var btnOK = el.querySelector(".btn-ok");
+                var btnCancel = el.querySelector(".btn-cancel");
                 var input = el.querySelector("input");
                 var label = el.querySelector("label");
 
                 // Set default value/placeholder of input
-                if (input) {
-                    if (typeof this.promptPlaceholder === "string") {
+                if(input) {
+                    if(typeof this.promptPlaceholder === "string") {
                         // Set the label, if available, for MDL, etc.
-                        if (label) {
+                        if(label) {
                             label.textContent = this.promptPlaceholder;
                         } else {
                             input.placeholder = this.promptPlaceholder;
                         }
                     }
-                    if (typeof this.promptValue === "string") {
+                    if(typeof this.promptValue === "string") {
                         input.value = this.promptValue;
                     }
                 }
 
                 function setupHandlers(resolve) {
-                    if ("function" !== typeof resolve) {
+                    if("function" !== typeof resolve) {
                         // promises are not available so resolve is a no-op
                         resolve = function () {};
                     }
 
-                    if (btnOK) {
+                    if(btnOK) {
                         btnOK.addEventListener("click", function(ev) {
-                            if (item.onOkay && "function" === typeof item.onOkay) {
-                                if (input) {
+                            if(item.onOkay && "function" === typeof item.onOkay) {
+                                if(input) {
                                     item.onOkay(input.value, ev);
                                 } else {
                                     item.onOkay(ev);
                                 }
                             }
 
-                            if (input) {
+                            if(input) {
                                 resolve({
                                     buttonClicked: "ok",
                                     inputValue: input.value,
@@ -298,9 +298,9 @@
                         });
                     }
 
-                    if (btnCancel) {
+                    if(btnCancel) {
                         btnCancel.addEventListener("click", function(ev) {
-                            if (item.onCancel && "function" === typeof item.onCancel) {
+                            if(item.onCancel && "function" === typeof item.onCancel) {
                                 item.onCancel(ev);
                             }
 
@@ -313,9 +313,9 @@
                         });
                     }
 
-                    if (input) {
+                    if(input) {
                         input.addEventListener("keyup", function(ev) {
-                            if (ev.which === 13) {
+                            if(ev.which === 13) {
                                 btnOK.click();
                             }
                         });
@@ -324,7 +324,7 @@
 
                 var promise;
 
-                if (typeof Promise === "function") {
+                if(typeof Promise === "function") {
                     promise = new Promise(setupHandlers);
                 } else {
                     setupHandlers();
@@ -332,12 +332,12 @@
 
                 this.parent.appendChild(el);
                 setTimeout(function() {
-                    el.classList.remove("hide");
+                    el.classList.remove("alertify-hide");
                     if(input && item.type && item.type === "prompt") {
                         input.select();
                         input.focus();
                     } else {
-                        if (btnOK) {
+                        if(btnOK) {
                             btnOK.focus();
                         }
                     }
@@ -362,21 +362,22 @@
                 return this;
             },
 
-            setMaxLogItems: function(num) {
-                this.maxLogItems = parseInt(num || this.defaultMaxLogItems);
+            setMaxToastItems: function(num) {
+                this.maxToastItems = parseInt(num || this.defaultMaxToastItems);
             },
 
             reset: function() {
                 this.parent = document.body;
                 this.okBtn(this.defaultOkLabel);
                 this.cancelBtn(this.defaultCancelLabel);
-                this.setMaxLogItems();
+                this.title("");
+                this.setMaxToastItems();
                 this.promptValue = "";
                 this.promptPlaceholder = "";
                 this.delay = this.defaultDelay;
-                this.setCloseLogOnClick(this.closeLogOnClickDefault);
-                this.setLogPosition("bottom left");
-                this.logTemplateMethod = null;
+                this.setCloseToastOnClick(this.closeToastOnClickDefault);
+                this.setToastPosition("bottom left");
+                this.toastTemplateMethod = null;
             }
 
         };
@@ -399,16 +400,16 @@
             prompt: function(message, onOkay, onCancel) {
                 return _alertify.dialog(message, "prompt", onOkay, onCancel) || this;
             },
-            log: function(message, click) {
-                _alertify.log(message, "default", click);
+            toast: function(message, click) {
+                _alertify.toast(message, "default", click);
                 return this;
             },
             success: function(message, click) {
-                _alertify.log(message, "success", click);
+                _alertify.toast(message, "success", click);
                 return this;
             },
             error: function(message, click) {
-                _alertify.log(message, "error", click);
+                _alertify.toast(message, "error", click);
                 return this;
             },
             cancelBtn: function(label) {
@@ -417,6 +418,10 @@
             },
             okBtn: function(label) {
                 _alertify.okBtn(label);
+                return this;
+            },
+            title: function(label) {
+                _alertify.title = label;
                 return this;
             },
             delay: function(time) {
@@ -431,24 +436,24 @@
                 _alertify.promptValue = str;
                 return this;
             },
-            maxLogItems: function(num) {
-                _alertify.setMaxLogItems(num);
+            maxToastItems: function(num) {
+                _alertify.setMaxToastItems(num);
                 return this;
             },
-            closeLogOnClick: function(bool) {
-                _alertify.setCloseLogOnClick(!! bool);
+            closeToastOnClick: function(bool) {
+                _alertify.setCloseToastOnClick(!! bool);
                 return this;
             },
-            logPosition: function(str) {
-                _alertify.setLogPosition(str || "");
+            toastPosition: function(str) {
+                _alertify.setToastPosition(str || "");
                 return this;
             },
-            setLogTemplate: function(templateMethod) {
-                _alertify.logTemplateMethod = templateMethod;
+            setToastTemplate: function(templateMethod) {
+                _alertify.toastTemplateMethod = templateMethod;
                 return this;
             },
-            clearLogs: function() {
-                _alertify.setupLogContainer().innerHTML = "";
+            clearToast: function() {
+                _alertify.setupToastContainer().innerHTML = "";
                 return this;
             },
             version: _alertify.version
@@ -456,16 +461,16 @@
     }
 
     // AMD, window, and NPM support
-    if ("undefined" !== typeof module && !! module && !! module.exports) {
+    if("undefined" !== typeof module && !! module && !! module.exports) {
         // Preserve backwards compatibility
         module.exports = function() {
             return new Alertify();
         };
         var obj = new Alertify();
-        for (var key in obj) {
+        for(var key in obj) {
             module.exports[key] = obj[key];
         }
-    } else if (typeof define === "function" && define.amd) {
+    } else if(typeof define === "function" && define.amd) {
         define(function() {
             return new Alertify();
         });
